@@ -1,8 +1,13 @@
 const http = require("http")
+const querystring = require("querystring")
 
 const server = http.createServer((req, res)=>{
-    res.writeHead(200, {'content-type': 'text/html'})
-    res.end('<h1>测试</h1>')
+    if(req.method === "GET") {
+        let params = querystring.parse(req.url.split("?")[1]);
+        res.end(JSON.stringify(params))
+    }else if(req.method === "POST") {
+        
+    }
 })
 
 server.listen(3000, ()=>{
