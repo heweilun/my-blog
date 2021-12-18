@@ -6,7 +6,7 @@ const server = http.createServer((req, res)=>{
         let params = querystring.parse(req.url.split("?")[1]);
         res.end(JSON.stringify(params))
     }else if(req.method === "POST") {
-        
+        res.end("post")
     }
 })
 
