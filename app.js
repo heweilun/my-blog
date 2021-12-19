@@ -6,7 +6,7 @@ const server = http.createServer((req, res)=>{
         let params = querystring.parse(req.url.split("?")[1]);
         res.end(JSON.stringify(params))
     }else if(req.method === "POST") {
-        console.log("这是dev的修改第二次")
+        console.log("这是master的分支")
         res.end("post end")
     }
 })
