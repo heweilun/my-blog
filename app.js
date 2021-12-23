@@ -1,32 +1,34 @@
 
 const querystring = require("querystring")
+const handleBlogRouter = require('./src/router/blog')
+const handleUserRouter = require('./src/router/user')
 
 const serverHandle = (req, res)=>{
     //设置返回格式
     res.setHeader('Content-type', 'application/json')
-    const method = req.method//请求方式
+    //不同模块功能分属不通目录
     const url = req.url//请求路径
-    const path = url.split('?')[0]
-    const query = querystring.parse(url.split('?')[1])//请求参数
-    // process.env.NODE_ENV cross-env安装后可获取
-    const resData = {
-        method,
-        url,
-        path,
-        query
+    req.path = url.split('?')[0]
+    req.query = querystring.parse(url.split('?')[1])
+
+    //blog路由处理
+    const blogData = handleBlogRouter(req, res)
+    if(blogData){
+        res.end(JSON.stringify(blogData))
+        return
     }
-    if(method === "GET") {
-        res.end(JSON.stringify(resData))
-    }else if(method === "POST") {
-        let postData = ""
-        req.on('data', chunk => {//发送数据
-            postData += chunk.toString()
-        })
-        req.on('end', () => {//数据发送完成
-            resData.postData = postData
-            res.end(JSON.stringify(resData))
-        })
+
+    //user路由处理
+    const userData = handleUserRouter(req, res)
+    if(userData){
+        res.end(JSON.stringify(userData))
+        return
     }
+
+    //未匹配上路由返回404 
+    res.writeHead(404, {"Content-type": "text/plain"})//设置响应头，否则中文乱码
+    res.write("404 Not Found\n")
+    res.end()
 }
 
 module.exports = serverHandle
