@@ -44,11 +44,23 @@ const serverHandle = (req, res)=>{
 
         // 为了保证所有路由获取post数据正常
         //blog路由处理
-        const blogData = handleBlogRouter(req, res)
-        if(blogData){
-            res.end(JSON.stringify(blogData))
+        // const blogData = handleBlogRouter(req, res)
+        // if(blogData){
+        //     res.end(JSON.stringify(blogData))
+        //     return
+        // }
+        const blogResult = handleBlogRouter(req, res)
+        if(blogResult) {
+            blogResult.then(blogData => {//变成了promise
+                console.log(blogData)
+                if(blogData){
+                    res.end(JSON.stringify(blogData))
+                }
+            })
             return
         }
+        
+        
 
         //user路由处理
         const userData = handleUserRouter(req, res)

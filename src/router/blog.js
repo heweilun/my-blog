@@ -2,7 +2,8 @@ const {
     getList, 
     getDetail, 
     newBlog,
-    updateBlog 
+    updateBlog,
+    deleteBlog
 } = require("../controller/blog")
 const { SuccessModel, ErrorModel } = require("../model/resModel")
 
@@ -11,8 +12,10 @@ const handleBlogRouter = (req, res) => {
 
     if(req.method === "GET" && req.path === "/api/blog/list") {
         const { author, keyword } = req.query || {}
-        const responseData = getList(author || "", keyword || "")
-        return new SuccessModel(responseData)
+        const sqlData = getList(author || "", keyword || "")
+        return sqlData.then(responseData => {
+            return new SuccessModel(responseData)
+        })
         // new ErrorModel(null,responseData)
     }
 
@@ -37,8 +40,11 @@ const handleBlogRouter = (req, res) => {
     }
 
     if(req.method === "POST" && req.path === "/api/blog/delete") {
-        return {
-            msg: "这是删除博客的接口"
+        const responseData = deleteBlog(req.body)
+        if(responseData) {
+            return new SuccessModel()
+        }else {
+            return new ErrorModel("删除失败")
         }
     }
 }

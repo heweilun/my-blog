@@ -1,28 +1,18 @@
+//引入数据库操作
+const { exec } = require('../db/mysql')
+
 const getList = (author, keyword) => {
-    // 先返回模拟数据
-    return [
-        {
-            id: 1,
-            title: "博客标题1",
-            content: "博客内容1",
-            createTime: 15412355411,
-            author: "张三"
-        },
-        {
-            id: 2,
-            title: "博客标题2",
-            content: "博客内容2",
-            createTime: 15412355411,
-            author: "李四"
-        },
-        {
-            id: 3,
-            title: "博客标题3",
-            content: "博客内容3",
-            createTime: 1542629552,
-            author: "王五"
-        },
-    ]
+    let sql = `select id, title, content, createtime, author from blogs where 1=1 `//1=1占位保证where的正确
+    if(author) {//有作者的查询
+        sql += `and author='${author}' `
+    }
+    if(keyword) {//有keyword的查询
+        sql += `and title like '%${keyword}%' `
+    }
+    sql += `order by createtime desc;`
+
+    //返回prommise
+    return exec(sql)
 }
 
 const getDetail = (id) => {
@@ -53,9 +43,20 @@ const updateBlog = (blogData = {}) => {
     
 }
 
+const deleteBlog = (blogData = {}) => {
+    //有id返回true 无返回false
+    if(blogData.id) {
+        return true
+    }else {
+        return false
+    }
+    
+}
+
 module.exports =  {
     getList,
     getDetail,
     newBlog,
-    updateBlog
+    updateBlog,
+    deleteBlog
 }
