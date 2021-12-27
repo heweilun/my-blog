@@ -21,13 +21,25 @@ const handleBlogRouter = (req, res) => {
 
     if(req.method === "GET" && req.path === "/api/blog/detail") {
         const { id } = req.query || {}
-        const responseData = getDetail(id || "")
-        return new SuccessModel(responseData)
+        const sqlData = getDetail(id || null)
+        return sqlData.then(responseData => {
+            if(responseData[0]) {
+                return new SuccessModel(idresponseData[0])//select返回的数据都是数组类型
+            }else {
+                return new ErrorModel(null)
+            }
+        })
     }
 
     if(req.method === "POST" && req.path === "/api/blog/new") {
-        const responseData = newBlog(req.body)
-        return new SuccessModel(responseData)
+        const sqlData = newBlog(req.body)
+        return sqlData.then(responseData => {
+            if(responseData) {
+                return new SuccessModel({id: responseData.insertId})//返回新建的数据id
+            }else {
+                return new ErrorModel(null)
+            }
+        })
     }
 
     if(req.method === "POST" && req.path === "/api/blog/update") {

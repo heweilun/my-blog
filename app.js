@@ -52,7 +52,6 @@ const serverHandle = (req, res)=>{
         const blogResult = handleBlogRouter(req, res)
         if(blogResult) {
             blogResult.then(blogData => {//变成了promise
-                console.log(blogData)
                 if(blogData){
                     res.end(JSON.stringify(blogData))
                 }

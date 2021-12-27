@@ -16,21 +16,17 @@ const getList = (author, keyword) => {
 }
 
 const getDetail = (id) => {
-    //返回模拟数据
-    return {
-        id: 1,
-        title: "博客标题1",
-        content: "这是博客内容详细信息",
-        createTime: 154332666,
-        author: "张三"
-    }
+    let sql = `select * from blogs where id='${id}'`
+    //返回promise
+    return exec(sql)
 }
 
 const newBlog = (blogData = {}) => {
-    //blogData是一个博客对象，包含title content熟悉
-    return {
-        id: 3,//表示新建博客，插入数据表内的id
-    }
+    //blogData是一个博客对象，包含title content author熟悉
+    const { title, content, createtime=Date.now(), author } = blogData
+    let sql = `insert into blogs (title, content, createtime, author) 
+    values ('${title}', '${content}', ${createtime}, '${author}')`
+    return exec(sql)
 }
 
 const updateBlog = (blogData = {}) => {
