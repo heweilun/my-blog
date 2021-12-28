@@ -43,21 +43,25 @@ const handleBlogRouter = (req, res) => {
     }
 
     if(req.method === "POST" && req.path === "/api/blog/update") {
-        const responseData = updateBlog(req.body)
-        if(responseData) {
-            return new SuccessModel()
-        }else {
-            return new ErrorModel("更新失败")
-        }
+        const sqlData = updateBlog(req.body)
+        return sqlData.then(updateData => {
+            if(updateData.affectedRows > 0) {//mysql返回的上次操作受影响数
+                return new SuccessModel()
+            }else {
+                return new ErrorModel(null)
+            }
+        })
     }
 
     if(req.method === "POST" && req.path === "/api/blog/delete") {
-        const responseData = deleteBlog(req.body)
-        if(responseData) {
-            return new SuccessModel()
-        }else {
-            return new ErrorModel("删除失败")
-        }
+        const sqlData = deleteBlog(req.body)
+        return sqlData.then(updateData => {
+            if(updateData.affectedRows > 0) {//mysql返回的上次操作受影响数
+                return new SuccessModel()
+            }else {
+                return new ErrorModel(null)
+            }
+        })
     }
 }
 

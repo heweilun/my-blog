@@ -31,22 +31,15 @@ const newBlog = (blogData = {}) => {
 
 const updateBlog = (blogData = {}) => {
     //有id返回true 无返回false
-    if(blogData.id) {
-        return true
-    }else {
-        return false
-    }
-    
+    const { title, content, id } = blogData
+    let sql = `update blogs set title='${title}', content='${content}' where id=${id}`
+    return exec(sql)
 }
 
 const deleteBlog = (blogData = {}) => {
-    //有id返回true 无返回false
-    if(blogData.id) {
-        return true
-    }else {
-        return false
-    }
-    
+    const { id, author } = blogData;
+    let sql = `delete from blogs where id=${id} and author='${author}'`
+    return exec(sql)
 }
 
 module.exports =  {

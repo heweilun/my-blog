@@ -58,13 +58,20 @@ const serverHandle = (req, res)=>{
             })
             return
         }
-        
-        
 
         //user路由处理
-        const userData = handleUserRouter(req, res)
-        if(userData){
-            res.end(JSON.stringify(userData))
+        // const userData = handleUserRouter(req, res)
+        // if(userData){
+        //     res.end(JSON.stringify(userData))
+        //     return
+        // }
+        const userResult = handleUserRouter(req, res)
+        if(userResult) {
+            userResult.then(userData => {//变成了promise
+                if(userData){
+                    res.end(JSON.stringify(userData))
+                }
+            })
             return
         }
 
