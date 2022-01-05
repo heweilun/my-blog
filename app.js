@@ -75,7 +75,7 @@ const serverHandle = (req, res)=>{
         SESSION_DATA[userId] = {}
         needSetCookie = true
     }
-    req.session = SESSION_DATA[userId]//浅拷贝
+    req.session = SESSION_DATA[userId]//对象索引赋值
 
 
     //处理post数据。原因：get参数是直接在url内可取
