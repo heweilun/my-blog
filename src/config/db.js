@@ -12,7 +12,7 @@ if(env === 'development'){
         database: 'myblog',//数据库名
     }
     REDIS_CONF = {
-        host: '120.0.0.1',
+        host: '127.0.0.1',
         port: 6379,
         user: 'root',
         password: {auth_pass: 'admin123456'},
@@ -28,7 +28,7 @@ if(env === 'production'){
         database: 'myblog',
     }
     REDIS_CONF = {
-        host: '120.0.0.1',
+        host: '127.0.0.1',
         port: 6379,
         user: 'root',
         password: {auth_pass: 'admin123456'},

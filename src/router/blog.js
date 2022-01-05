@@ -7,8 +7,23 @@ const {
 } = require("../controller/blog")
 const { SuccessModel, ErrorModel } = require("../model/resModel")
 
+//统一的登录验证函数
+const loginCheck = (req) => {
+    if(!req.session.username) {
+        return Promise.resolve(
+            new ErrorModel('尚未登录')
+        )
+    }
+    
+}
+
 const handleBlogRouter = (req, res) => {
     //博客的路由处理 查询 详情 新建 更新 删除
+    let logionStatus = loginCheck(req)
+    if(logionStatus) {
+        //未登录
+        return logionStatus
+    }
 
     if(req.method === "GET" && req.path === "/api/blog/list") {
         const { author, keyword } = req.query || {}
@@ -32,6 +47,7 @@ const handleBlogRouter = (req, res) => {
     }
 
     if(req.method === "POST" && req.path === "/api/blog/new") {
+        req.body.author = req.session.username
         const sqlData = newBlog(req.body)
         return sqlData.then(responseData => {
             if(responseData) {
@@ -43,6 +59,7 @@ const handleBlogRouter = (req, res) => {
     }
 
     if(req.method === "POST" && req.path === "/api/blog/update") {
+        req.body.author = res.session.username
         const sqlData = updateBlog(req.body)
         return sqlData.then(updateData => {
             if(updateData.affectedRows > 0) {//mysql返回的上次操作受影响数
@@ -54,6 +71,7 @@ const handleBlogRouter = (req, res) => {
     }
 
     if(req.method === "POST" && req.path === "/api/blog/delete") {
+        req.body.author = req.session.username
         const sqlData = deleteBlog(req.body)
         return sqlData.then(updateData => {
             if(updateData.affectedRows > 0) {//mysql返回的上次操作受影响数
