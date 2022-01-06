@@ -31,8 +31,8 @@ const newBlog = (blogData = {}) => {
 
 const updateBlog = (blogData = {}) => {
     //有id返回true 无返回false
-    const { title, content, id } = blogData
-    let sql = `update blogs set title='${title}', content='${content}' where id=${id}`
+    const { title, content, id, author } = blogData
+    let sql = `update blogs set title='${title}', content='${content}' where id=${id} and author='${author}'`
     return exec(sql)
 }
 

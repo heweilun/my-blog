@@ -2,9 +2,9 @@
 const querystring = require("querystring")
 const handleBlogRouter = require('./src/router/blog')
 const handleUserRouter = require('./src/router/user')
-const redis = require('./src/db/redis')
+const {redisSet, redisGet} = require('./src/db/redis')
 
-const SESSION_DATA = {}//session 数据
+// const SESSION_DATA = {}//session 数据
 
 //获取cookie过期时间
 const getCookieExpires = () => {
@@ -65,23 +65,44 @@ const serverHandle = (req, res)=>{
 
     //解析 session
     //session为保证安全及cookie的条件所限使用的东西。前端理解：存储于后端的个人信息
+    // let needSetCookie = false//判断是否需要设置cookie
+    // let userId = req.cookie.userid
+    // if(userId) {//其实就是userId的保证，确保有userid，当前session没有就创建，有就直接赋值
+    //     if(!SESSION_DATA[userId]) {
+    //         SESSION_DATA[userId] = {}
+    //     }
+    // } else {
+    //     userId = `${Date.now()}_${Math.random()}`
+    //     SESSION_DATA[userId] = {}
+    //     needSetCookie = true
+    // }
+    // req.session = SESSION_DATA[userId]//索引赋值
+    //解析 session (使用redis)
     let needSetCookie = false//判断是否需要设置cookie
     let userId = req.cookie.userid
-    if(userId) {//其实就是userId的保证，确保有userid，当前session没有就创建，有就直接赋值
-        if(!SESSION_DATA[userId]) {
-            SESSION_DATA[userId] = {}
-        }
-    } else {
-        userId = `${Date.now()}_${Math.random()}`
-        SESSION_DATA[userId] = {}
+    if(!userId) {
         needSetCookie = true
+        userId = `${Date.now()}_${Math.random()}`
+        //初始化session
+        redisSet(userId, {})
     }
-    req.session = SESSION_DATA[userId]//索引赋值
-
-
-    //处理post数据。原因：get参数是直接在url内可取
+    //获取session
+    req.sessionId = userId
+    redisGet(userId).then(sessionData => {//通过userid也就是sessionId获取相关的redis存储数据
+        if(sessionData === null) {
+            //初始化session
+            redisSet(req.sessionId, {})
+            //设置session
+            req.session = {}
+        } else {
+            //设置session
+            req.session = sessionData
+        }
+        console.log('req.session ', req.session)
+        return getPostData(req)
+    }).then(postData => {
+        //处理post数据。原因：get参数是直接在url内可取
     //post请求所传的参数在请求体。node默认不解析请求体。解析请求体是一项耗时工作，需要需要时手动处理
-    getPostData(req).then(postData => {
         req.body = postData
 
         // 为了保证所有路由获取post数据正常
