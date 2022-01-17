@@ -20,14 +20,9 @@ const loginCheck = (req) => {
 const handleBlogRouter = (req, res) => {
     //博客的路由处理 查询 详情 新建 更新 删除
     let logionStatus = loginCheck(req)
-    if(logionStatus) {
-        //未登录
-        return logionStatus
-    }
-
     if(req.method === "GET" && req.path === "/api/blog/list") {
         const { author, keyword } = req.query || {}
-        const sqlData = getList(author || "", keyword || "")
+        const sqlData = getList(author || "", keyword === 'null'?null:keyword || "")
         return sqlData.then(responseData => {
             return new SuccessModel(responseData)
         })
@@ -35,6 +30,10 @@ const handleBlogRouter = (req, res) => {
     }
 
     if(req.method === "GET" && req.path === "/api/blog/detail") {
+        if(logionStatus) {
+            //未登录
+            return logionStatus
+        }
         const { id } = req.query || {}
         const sqlData = getDetail(id || null)
         return sqlData.then(responseData => {
@@ -47,6 +46,10 @@ const handleBlogRouter = (req, res) => {
     }
 
     if(req.method === "POST" && req.path === "/api/blog/new") {
+        if(logionStatus) {
+            //未登录
+            return logionStatus
+        }
         req.body.author = req.session.username
         const sqlData = newBlog(req.body)
         return sqlData.then(responseData => {
@@ -59,6 +62,10 @@ const handleBlogRouter = (req, res) => {
     }
 
     if(req.method === "POST" && req.path === "/api/blog/update") {
+        if(logionStatus) {
+            //未登录
+            return logionStatus
+        }
         req.body.author = res.session.username
         const sqlData = updateBlog(req.body)
         return sqlData.then(updateData => {
@@ -71,6 +78,10 @@ const handleBlogRouter = (req, res) => {
     }
 
     if(req.method === "POST" && req.path === "/api/blog/delete") {
+        if(logionStatus) {
+            //未登录
+            return logionStatus
+        }
         req.body.author = req.session.username
         const sqlData = deleteBlog(req.body)
         return sqlData.then(updateData => {

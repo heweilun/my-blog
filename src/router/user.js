@@ -15,7 +15,7 @@ const handleUserRouter = (req, res) => {
             if(responseData.length > 0 && responseData[0].username){
                 req.session.username = responseData[0].username
                 req.session.realname = responseData[0].realname
-                //同步到redis
+                //同步到redis 登录依据
                 redisSet(req.sessionId, {
                     username: responseData[0].username,
                     realname: responseData[0].realname

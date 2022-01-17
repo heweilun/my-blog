@@ -5,7 +5,7 @@ let REDIS_CONF
 
 if(env === 'development'){
     MYSQL_CONF = {
-        host: "localhost",//ip
+        host: "127.0.0.1",//ip
         user: 'root',//用户名
         password: 'admin123456',//密码
         port: '3306',//端口
@@ -21,7 +21,7 @@ if(env === 'development'){
 
 if(env === 'production'){
     MYSQL_CONF = {
-        host: "localhost",
+        host: "127.0.0.1",
         user: 'root',
         password: 'Hikvision110.',
         port: '3306',
