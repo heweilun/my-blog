@@ -1,11 +1,6 @@
 // 数据返回统一处理模型
 class BaseModel {
     constructor(data, message) {
-        if(typeof data === "string") {
-            this.message = data
-            data = null
-            message = null
-        }
         if(data) {
             this.data = data
         }
@@ -16,16 +11,16 @@ class BaseModel {
 }
 
 class SuccessModel extends BaseModel {
-    constructor(data, message){
+    constructor(data, message, errno){
         super(data, message)
-        this.errno = 0
+        this.errno = errno || 0
     }
 }
 
 class ErrorModel extends BaseModel {
-    constructor(data, message) {
+    constructor(data, message, errno) {
         super(data, message)
-        this.errno = -1
+        this.errno = errno || -1
     }
 }
 

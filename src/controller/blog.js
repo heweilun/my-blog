@@ -10,7 +10,6 @@ const getList = (author, keyword) => {
         sql += `and title like '%${keyword}%' `
     }
     sql += `order by createtime desc;`
-
     //返回prommise
     return exec(sql)
 }

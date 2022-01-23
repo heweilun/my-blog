@@ -22,7 +22,7 @@ const handleUserRouter = (req, res) => {
                 })
                 return new SuccessModel(responseData[0])
             }else {
-                return new ErrorModel("登陆错误")
+                return new ErrorModel(null,"账户或密码错误")
             }
         })
     }
