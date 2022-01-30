@@ -6,6 +6,14 @@ const login = (postData) => {
     return exec(sql)
 }
 
+const register = (postData) => {
+    const {username, password} = postData
+    let sql = `insert into users (username, password) 
+    values ('${username}', '${password}')`
+    return exec(sql)
+}
+
 module.exports = {
-    login
+    login,
+    register
 }

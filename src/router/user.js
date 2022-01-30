@@ -27,6 +27,17 @@ const handleUserRouter = (req, res) => {
         })
     }
 
+    if(req.method === "POST" && req.path === "/api/user/register") {
+        const sqlData = register(req.body)
+        return sqlData.then(responseData => {
+            console.log(responseData)
+            if(responseData) {
+                return new SuccessModel(responseData, 'success')//返回新建的数据id
+            }else {
+                return new ErrorModel(null, "账户注册失败")
+            }
+        })
+    }
 }
 
 module.exports = handleUserRouter
