@@ -19,7 +19,8 @@ function exec(sql) {
 }
 
 module.exports = {
-    exec
+    exec,
+    escape: mysql.escape
 }
 //结束连接
 // connection.end()
